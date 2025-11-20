@@ -1,0 +1,45 @@
+name: React CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: |
+          if npm run lint --silent; then
+            echo "Lint passed"
+          else
+            echo "Lint failed"
+            exit 1
+          fi
+
+      - name: Run tests
+        run: npm test -- --watchAll=false
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: react-build
+          path: build/
