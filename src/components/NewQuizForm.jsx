@@ -1,108 +1,116 @@
-import { useState } from "react"
-import CreateQuizDirectQuestion from "./blocks/CreateQuizDirectQuestion"
-import CreateQuizSignleAnswer from "./blocks/CreateQuizSignleAnswer"
-import CreateQuizMultipleAnswer from "./blocks/CreateQuizMultipleAnswer"
+import { useState } from "react";
+import CreateQuizDirectQuestion from "./blocks/CreateQuizDirectQuestion";
+import CreateQuizSignleAnswer from "./blocks/CreateQuizSignleAnswer";
+import CreateQuizMultipleAnswer from "./blocks/CreateQuizMultipleAnswer";
 
 export default function NewQuizForm() {
-
-
     const [questionList, setQuestionList] = useState([
-        { id: Date.now(), type: 'direct', options: [''], question: '', correctAnswer: '' },
-    ])
+        {
+            id: Date.now(),
+            type: "direct",
+            options: [""],
+            question: "",
+            correctAnswer: "",
+        },
+    ]);
 
-    const [quizName, setQuizName] = useState('')
+    const [quizName, setQuizName] = useState("");
 
+    const addQuestion = () => {
+        setQuestionList([
+            ...questionList,
+            {
+                id: Date.now(),
+                type: "direct",
+                options: [""],
+                question: "",
+                correctAnswer: "",
+            },
+        ]);
+    };
 
-
-    function addQuestion() {
+    const editQuestion = (id, value, field) => {
         setQuestionList(
-            [
-                ...questionList,
-                { id: Date.now(), type: 'direct', options: [''], question: '', correctAnswer: '' }
-            ]
-        )
-    }
+            questionList.map((item) =>
+                item.id === id ? { ...item, [field]: value } : item
+            )
+        );
+    };
 
-    function editQuestion(id, value, field) {
-
-        setQuestionList(
-            questionList.map(item => {
-                if (item.id == id) {
-                    item = {
-                        ...item,
-                        [field]: value
-                    }
-                    return item
-                } else {
-                    return item
-                }
-            })
-        )
-    }
-
-
-    function saveQuiz() {
+    const saveQuiz = () => {
         const quizToSave = {
             id: Date.now(),
-            title: quizName,
-            quizQuestions: questionList
-        }
-        if (localStorage.getItem('quizes')) {
-            const quizes = JSON.parse(localStorage.getItem('quizes'))
-            quizes.push(quizToSave)
-            localStorage.setItem('quizes', JSON.stringify(quizes))
-        } else {
-            localStorage.setItem('quizes', JSON.stringify([quizToSave]))
-        }
-    }
+            title: quizName || "Без названия",
+            quizQuestions: questionList,
+        };
 
+        const existing = JSON.parse(localStorage.getItem("quizes") || "[]");
+        existing.push(quizToSave);
+        localStorage.setItem("quizes", JSON.stringify(existing));
+    };
 
     return (
-        <div>
-            <div className="flex justify-center">
+        <div className="max-w-4xl mx-auto p-6">
+            <div className="flex justify-center mb-8">
                 <input
-                    className="border border-gray-500 px-2 py-1 my-6 w-1/2"
+                    className="border border-gray-500 px-4 py-2 w-full max-w-lg text-center text-xl"
                     value={quizName}
-                    onInput={(e) => setQuizName(e.target.value)}
+                    onChange={(e) => setQuizName(e.target.value)}
                     type="text"
-                    placeholder="Название квиза" />
-
+                    placeholder="Название квиза"
+                />
             </div>
 
-            <div>
+            {questionList.map((question) => (
+                <div
+                    key={question.id}
+                    className="border border-gray-300 rounded-lg p-6 mb-8 bg-white shadow"
+                >
+                    <select
+                        className="bg-gray-700 text-white px-4 py-2 mb-6 rounded"
+                        value={question.type}
+                        onChange={(e) => editQuestion(question.id, e.target.value, "type")}
+                    >
+                        <option value="direct">Прямой ответ</option>
+                        <option value="single">Единичный выбор</option>
+                        <option value="multiple">Множественный выбор</option>
+                    </select>
 
-                {
-                    questionList.map(question => (
-                        <div>
-                            <select className="bg-gray-500 text-white px-2 py-1 mb-4" onChange={(e) => editQuestion(question.id, e.target.value, 'type')}>
-                                <option value="direct">Прямой ответ</option>
-                                <option value="single">Единичный выбор</option>
-                                <option value="multiple">Множественный выбор</option>
-                            </select>
-                            {
-                                question.type === 'direct' &&
-                                <CreateQuizDirectQuestion question={question} editQuestion={editQuestion} />
-                            }
-                            {
-                                question.type === 'single' &&
-                                <CreateQuizSignleAnswer question={question} editQuestion={editQuestion} />
-                            }
-                            {
-                                question.type === 'multiple' &&
-                                <CreateQuizMultipleAnswer question={question} editQuestion={editQuestion} />
-                            }
-                        </div>
-
-                    ))
-                }
-
-                <button className="px-2 py-1 bg-amber-500 text-white rounded-lg" onClick={() => addQuestion()}>Добавить вопрос</button>
-
-                <div className="text-center mt-5">
-                    <button className="px-2 py-1 bg-green-500 text-white rounded-lg" onClick={() => saveQuiz()}>Сохранить Квиз!</button>
+                    {question.type === "direct" && (
+                        <CreateQuizDirectQuestion
+                            question={question}
+                            editQuestion={editQuestion}
+                        />
+                    )}
+                    {question.type === "single" && (
+                        <CreateQuizSignleAnswer
+                            question={question}
+                            editQuestion={editQuestion}
+                        />
+                    )}
+                    {question.type === "multiple" && (
+                        <CreateQuizMultipleAnswer
+                            question={question}
+                            editQuestion={editQuestion}
+                        />
+                    )}
                 </div>
-            </div>
+            ))}
+            <div className="flex justify-center gap-6 mt-10">
+                <button
+                    className="px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition"
+                    onClick={addQuestion}
+                >
+                    Добавить вопрос
+                </button>
 
+                <button
+                    className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                    onClick={saveQuiz}
+                >
+                    Сохранить Квиз!
+                </button>
+            </div>
         </div>
-    )
+    );
 }

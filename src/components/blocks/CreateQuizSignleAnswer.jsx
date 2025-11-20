@@ -1,41 +1,61 @@
 export default function CreateQuizSignleAnswer({ question, editQuestion }) {
 
-
-    function editOption(id, index, value) {
-        const optionsOld = question.options
-        optionsOld[index] = value
-        editQuestion(id, optionsOld, 'options')
-    }
-
+    const editOption = (id, index, value) => {
+        const newOptions = question.options.map((opt, i) =>
+            i === index ? value : opt
+        );
+        editQuestion(id, newOptions, "options");
+    };
 
     return (
-
-        <div>
-            <label>
-                <p>Введите текст вопроса</p>
-                <input className="border border-gray-500 px-2 py-1 my-2" value={question.question} onInput={(e) => editQuestion(question.id, e.target.value, 'question')} type="text" placeholder="Текст вопроса" />
+        <div className="space-y-6">
+            <label className="block">
+                <p className="mb-2 font-medium">Введите текст вопроса</p>
+                <input
+                    className="border border-gray-500 px-3 py-2 w-full rounded"
+                    type="text"
+                    placeholder="Текст вопроса"
+                    value={question.question}
+                    onInput={(e) => editQuestion(question.id, e.target.value, "question")}
+                />
             </label>
 
-            <div>
-                {
-                    question.options.map((option, index) => (
-                        <div className="flex items-center gap-x-3">
-                            <input className="border border-gray-500 px-2 py-1 my-2" type="text" value={option} onInput={(e) => editOption(question.id, index, e.target.value)} placeholder={`Вариант ${index + 1}`} />
-                            <button className="cursor-pointer border border-green-500 px-2 py-1 hover:bg-green-500 hover:text-white transition-all" onClick={() => editQuestion(question.id, option, 'correctAnswer')}>Отметить правильный ответ</button>
-                        </div>
+            <div className="space-y-4">
+                <p className="font-medium">Варианты ответа (выберите один правильный)</p>
+                {question.options.map((option, index) => (
+                    <div key={index} className="flex items-center gap-x-4">
+                        <input
+                            type="radio"
+                            name={`correct-${question.id}`}
+                            checked={question.correctAnswer === option}
+                            onChange={() => editQuestion(question.id, option, "correctAnswer")}
+                        />
 
-                    ))
-                }
+                        <input
+                            className="border border-gray-500 px-3 py-2 flex-1 rounded"
+                            type="text"
+                            placeholder={`Вариант ${index + 1}`}
+                            value={option}
+                            onInput={(e) => editOption(question.id, index, e.target.value)}
+                        />
+                    </div>
+                ))}
             </div>
+
             <button
-                onClick={() => editQuestion(question.id, [...question.options, ''], 'options')}
-                className="border border-amber-500 py-1 px-2 rounded-xl mt-3"
-            >Добавить вариант</button>
+                onClick={() =>
+                    editQuestion(question.id, [...question.options, ""], "options")
+                }
+                className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition"
+            >
+                + Добавить вариант
+            </button>
 
-            <div>
-                <h4>Правильный ответ</h4>
-                <input type="text" value={question.correctAnswer} className="border border-green-500 py-1 px-2 rounded-xl mt-3" />
-            </div>
+            {question.correctAnswer && (
+                <div className="mt-4 p-3 bg-green-100 border border-green-500 rounded">
+                    <strong>Правильный ответ:</strong> {question.correctAnswer}
+                </div>
+            )}
         </div>
-    )
+    );
 }

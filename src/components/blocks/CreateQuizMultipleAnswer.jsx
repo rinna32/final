@@ -1,78 +1,90 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 export default function CreateQuizMultipleAnswer({ question, editQuestion }) {
-
-
-    function editOption(id, index, value) {
-        const optionsOld = question.options
-        optionsOld[index] = value
-        editQuestion(id, optionsOld, 'options')
-    }
-
-    const [checkedAnswers, setCheckedAnswers] = useState([])
-
-
-    function checkCorrectAnswer(answer) {
-        if (checkedAnswers.includes(answer)) {
-            setCheckedAnswers(
-                checkedAnswers.filter((item) => item !== answer)
-            )
-        } else {
-            setCheckedAnswers(
-                [
-                    ...checkedAnswers,
-                    answer
-                ]
-            )
-        }
-
-
-    }
+    const [checkedAnswers, setCheckedAnswers] = useState([]);
 
     useEffect(() => {
-        editQuestion(question.id, checkedAnswers, 'correctAnswer')
-    }, [checkedAnswers])
+        if (Array.isArray(question.correctAnswer)) {
+            setCheckedAnswers(question.correctAnswer);
+        } else {
+            setCheckedAnswers([]);
+        }
+    }, [question.correctAnswer]);
 
+    useEffect(() => {
+        editQuestion(question.id, checkedAnswers, "correctAnswer");
+    }, [checkedAnswers, question.id, editQuestion]);
+
+    const editOption = (index, value) => {
+        const newOptions = question.options.map((opt, i) =>
+            i === index ? value : opt
+        );
+        editQuestion(question.id, newOptions, "options");
+    };
+
+    const toggleCorrectAnswer = (option) => {
+        setCheckedAnswers((prev) =>
+            prev.includes(option)
+                ? prev.filter((a) => a !== option)
+                : [...prev, option]
+        );
+    };
 
     return (
-
-        <div>
-            <label>
-                <p>Введите текст вопроса</p>
-                <input className="border border-gray-500 px-2 py-1 my-2" value={question.question} onInput={(e) => editQuestion(question.id, e.target.value, 'question')} type="text" placeholder="Текст вопроса" />
+        <div className="space-y-6">
+            <label className="block">
+                <p className="mb-2 font-medium">Введите текст вопроса</p>
+                <input
+                    className="border border-gray-500 px-3 py-2 w-full rounded"
+                    type="text"
+                    placeholder="Текст вопроса"
+                    value={question.question}
+                    onInput={(e) => editQuestion(question.id, e.target.value, "question")}
+                />
             </label>
 
-            <div>
-                {
-                    question.options.map((option, index) => (
-                        <div className="flex gap-x-4">
-                            <input className="border border-gray-500 px-2 py-1 my-2" type="text" value={option} onInput={(e) => editOption(question.id, index, e.target.value)} placeholder={`Вариант ${index + 1}`} />
-                            <label className="flex gap-x-3 items-center">
-                                <input type="checkbox" onChange={() => checkCorrectAnswer(option, question.id)} />
-                                <p>Правильный ответ</p>
-                            </label>
-                        </div>
+            <div className="space-y-3">
+                {question.options.map((option, index) => (
+                    <div key={index} className="flex items-center gap-4">
+                        <input
+                            className="border border-gray-500 px-3 py-2 flex-1 rounded"
+                            type="text"
+                            placeholder={`Вариант ${index + 1}`}
+                            value={option}
+                            onInput={(e) => editOption(index, e.target.value)}
+                        />
 
-                    ))
-                }
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={checkedAnswers.includes(option)}
+                                onChange={() => toggleCorrectAnswer(option)}
+                            />
+                            <span>Правильный</span>
+                        </label>
+                    </div>
+                ))}
             </div>
+
             <button
-                onClick={() => editQuestion(question.id, [...question.options, ''], 'options')}
-                className="cursor-pointer px-2 py-1 border border-amber-500 rounded-lg"
-            >Добавить вариант</button>
+                onClick={() =>
+                    editQuestion(question.id, [...question.options, ""], "options")
+                }
+                className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition"
+            >
+                + Добавить вариант
+            </button>
 
-            <div>
-                <h4>Правильные ответы</h4>
-                <ul className="list-disc">
-                    {
-                        typeof question.correctAnswer === 'object' &&
-                        question.correctAnswer.map(answer => (
-                            <li>{answer}</li>
-                        ))
-                    }
-                </ul>
-
-            </div>
+            {checkedAnswers.length > 0 && (
+                <div className="mt-4 p-4 bg-green-50 border border-green-400 rounded">
+                    <h4 className="font-semibold mb-2">Правильные ответы:</h4>
+                    <ul className="list-disc list-inside">
+                        {checkedAnswers.map((ans, i) => (
+                            <li key={i}>{ans || "(пустой вариант)"}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
-    )
+    );
 }

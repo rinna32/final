@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router";
 
 export default function IndexPage() {
 
@@ -11,11 +10,9 @@ export default function IndexPage() {
             try {
                 const response = await fetch("https://worldtimeapi.org/api/timezone/Europe/Moscow");
                 const data = await response.json();
-
-                // Преобразуем дату
                 const date = new Date(data.datetime);
                 setTime(date.toLocaleString("ru-RU"));
-            } catch (err) {
+            } catch {
                 setTime("Не удалось загрузить время");
             } finally {
                 setLoading(false);
