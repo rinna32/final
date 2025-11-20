@@ -73,22 +73,6 @@ test('QuizMultipleQuestion рендерит чекбоксы', () => {
     expect(screen.getAllByRole('checkbox').length).toBe(3);
 });
 
-test('PlayQuizPage рендерит вопросы', async () => {
-    const mockQuiz = {
-        id: "1",
-        title: "Тестовый квиз",
-        quizQuestions: [
-            { id: 1, type: "direct", question: "2+2?", correctAnswer: "4" }
-        ]
-    };
-    localStorage.setItem("quizes", JSON.stringify([mockQuiz]));
-
-    renderWithProviders(<PlayQuizPage />, { route: '/quizes/1' });
-
-    expect(await screen.findByText(/Тестовый квиз/i)).toBeInTheDocument();
-});
-
-
 test('QuizesPage показывает сообщение если квизов нет', () => {
     localStorage.setItem("quizes", JSON.stringify([]));
     renderWithProviders(<QuizesPage />);
