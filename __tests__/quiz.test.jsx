@@ -75,7 +75,7 @@ test('QuizMultipleQuestion рендерит чекбоксы', () => {
 
 test('PlayQuizPage рендерит вопросы', async () => {
     const mockQuiz = {
-        id: 1,
+        id: "1",
         title: "Тестовый квиз",
         quizQuestions: [
             { id: 1, type: "direct", question: "2+2?", correctAnswer: "4" }
@@ -87,6 +87,7 @@ test('PlayQuizPage рендерит вопросы', async () => {
 
     expect(await screen.findByText(/Тестовый квиз/i)).toBeInTheDocument();
 });
+
 
 test('QuizesPage показывает сообщение если квизов нет', () => {
     localStorage.setItem("quizes", JSON.stringify([]));
