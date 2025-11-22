@@ -28,7 +28,7 @@ npm run dev
    Чтобы открыть сайт, скопируйте ссылку и вставьте её в браузер или зажмите **Ctrl + ЛКМ (Windows) / Command + ЛКМ (MacOS)**.
 
 # Архитектура проекта
-
+```
 final/
 ├── tests/                      # Тесты проекта
 ├── .github/
@@ -67,7 +67,7 @@ final/
 ├── vite.config.js
 ├── eslint.config.js
 └── README.md
-
+```
 
 ## Технические требования
 
