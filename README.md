@@ -30,14 +30,14 @@ npm run dev
 # Архитектура проекта
 ```
 final/
-├── tests/                      # Тесты проекта
+├── tests/                      # Тесты 
 ├── .github/
-│   └── workflows/              # Конфигурации GitHub Actions
-├── coverage/                   # Отчёты покрытия тестами
-├── node_modules/               # Установленные зависимости
-├── public/                     # Статичные файлы (например, index.html)
+│   └── workflows/              # GitHub Actions
+├── coverage/                   # Покрытия тестами
+├── node_modules/               # Зависимости
+├── public/                     
 ├── src/
-│   ├── assets/                 # Статичные ресурсы (картинки, иконки)
+│   ├── assets/                 
 │   ├── components/
 │   │   ├── blocks/             # Компоненты для квизов
 │   │   │   ├── CreateQuizDirectQuestion.jsx
@@ -48,7 +48,7 @@ final/
 │   │   │   ├── QuizSingleAnswer.jsx
 │   │   │   └── NewQuizForm.jsx
 │   │   └── context/
-│   │       └── AuthContext.jsx # Контекст аутентификации
+│   │       └── AuthContext.jsx 
 │   ├── pages/                  # Страницы приложения
 │   │   ├── AdminPage.jsx
 │   │   ├── CreateQuizPage.jsx
@@ -61,7 +61,7 @@ final/
 │   ├── index.css               # Глобальные стили
 │   ├── main.jsx                # Точка входа в приложение
 │   ├── routes.js               # Настройка маршрутов
-│   └── stores.js               # Хранилища состояния (например, Zustand/Pinia)
+│   └── stores.js               # Хранилища состояния 
 ├── .gitignore
 ├── package.json
 ├── vite.config.js
