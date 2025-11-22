@@ -27,12 +27,12 @@ npm run dev
 5. В терминале появится ссылка на локальный сервер проекта (обычно [http://localhost:5173](http://localhost:5173)).
    Чтобы открыть сайт, скопируйте ссылку и вставьте её в браузер или зажмите **Ctrl + ЛКМ (Windows) / Command + ЛКМ (MacOS)**.
 
-## Структура репозитория
+# Архитектура проекта
 
-Основная архитектура приложения:
 final/
-├── __tests__/                  # Тесты проекта
-├── .github/workflows/          # Конфигурации GitHub Actions
+├── tests/                      # Тесты проекта
+├── .github/
+│   └── workflows/              # Конфигурации GitHub Actions
 ├── coverage/                   # Отчёты покрытия тестами
 ├── node_modules/               # Установленные зависимости
 ├── public/                     # Статичные файлы (например, index.html)
@@ -58,10 +58,10 @@ final/
 │   │   └── QuizzesPage.jsx
 │   ├── App.jsx                 # Главный компонент приложения
 │   ├── data.js                 # Данные для приложения
-│   ├── index.css                # Глобальные стили
-│   ├── main.jsx                 # Точка входа
+│   ├── index.css               # Глобальные стили
+│   ├── main.jsx                # Точка входа в приложение
 │   ├── routes.js               # Настройка маршрутов
-│   └── stores.js               
+│   └── stores.js               # Хранилища состояния (например, Zustand/Pinia)
 ├── .gitignore
 ├── package.json
 ├── vite.config.js
